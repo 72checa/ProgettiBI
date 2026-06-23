@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "4ae42619e805406ad095",
   "position": {
-    "x": 0,
-    "y": 407,
+    "x": 416.29179331306995,
+    "y": 374.468085106383,
     "z": 3000,
-    "height": 313,
-    "width": 645,
+    "height": 313.19148936170217,
+    "width": 644.86322188449856,
     "tabOrder": 3000
   },
   "visual": {
@@ -72,5 +72,51 @@
       }
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "8553ac20e6d30d0a23ca",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Date"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1461fa2d8c9298a166b2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimCanale"
+              }
+            },
+            "Property": "Canale"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "9a5a98c3a3b2e61b10a4",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Misure"
+              }
+            },
+            "Property": "Vendite"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
