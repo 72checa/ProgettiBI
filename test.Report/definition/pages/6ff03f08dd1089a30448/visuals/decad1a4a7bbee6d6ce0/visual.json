@@ -1,0 +1,74 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "decad1a4a7bbee6d6ce0",
+  "position": {
+    "x": 284.01215805471128,
+    "y": 552.46200607902733,
+    "z": 5000,
+    "height": 112.82674772036475,
+    "width": 355.98784194528878,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Misure"
+                    }
+                  },
+                  "Property": "Lotti in magazzino scadenza 30gg"
+                }
+              },
+              "queryRef": "Misure.Lotti in magazzino scadenza 30gg",
+              "nativeQueryRef": "Lotti in magazzino scadenza 30gg"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Misure"
+                  }
+                },
+                "Property": "Lotti in magazzino scadenza 30gg"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2655bb8bba88721a702c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Misure"
+              }
+            },
+            "Property": "Lotti in magazzino scadenza 30gg"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

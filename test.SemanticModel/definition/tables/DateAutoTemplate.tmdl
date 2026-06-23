@@ -1,0 +1,187 @@
+table DateAutoTemplate
+	isHidden
+	lineageTag: aa9df6f8-5f76-4f39-ab86-9f6c65d5d5d1
+	dataCategory: Time
+
+	column Date
+		isHidden
+		isKey
+		formatString: dd/mm/yyyy
+		lineageTag: ef677f74-b178-4225-8906-9bd38d5fe9b6
+		dataCategory: PaddedDateTableDates
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SQLBI_AttributeTypes = Date
+
+	column Year
+		isHidden
+		lineageTag: c243549e-d511-4db9-a32a-c4f20cbf355e
+		dataCategory: Years
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+	column 'Year Quarter Number'
+		isHidden
+		lineageTag: 7515b763-4847-4fc4-8c87-df8e4147bd22
+		dataCategory: Quarters
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Quarter Number]
+
+	column 'Year Quarter'
+		isHidden
+		lineageTag: c07bdd8e-5a45-4121-bc37-662fc8f66cf3
+		dataCategory: Quarters
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Quarter]
+		sortByColumn: 'Year Quarter Number'
+
+	column Quarter
+		isHidden
+		lineageTag: e246906f-11d5-496a-9f9b-d250cf84a8e0
+		dataCategory: QuarterOfYear
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+	column 'Year Month'
+		isHidden
+		lineageTag: c24f9d07-51bb-4ca5-b451-3476138a0537
+		dataCategory: Months
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month]
+		sortByColumn: 'Year Month Number'
+
+	column 'Year Month Number'
+		isHidden
+		lineageTag: fa1b8fe9-665e-48bd-a4eb-945f40ac7879
+		dataCategory: Months
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month Number]
+
+	column Month
+		isHidden
+		lineageTag: 3f62c397-e0f9-462e-87a1-81c3e86bf756
+		dataCategory: MonthOfYear
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+	column 'Month Number'
+		isHidden
+		lineageTag: 42ede6c9-72b9-4946-94a0-b1ecc9c67eec
+		dataCategory: MonthOfYear
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+	column 'Day of Week Number'
+		isHidden
+		lineageTag: 9ba6263b-d92e-4172-86e0-4c0ef020cf5d
+		dataCategory: DayOfWeek
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day of Week Number]
+
+		annotation SQLBI_AttributeTypes = DayOfWeek
+
+		annotation SQLBI_FilterSafe = True
+
+	column 'Day of Week'
+		isHidden
+		lineageTag: c166e5d9-e53c-4ee4-a0c5-705bce937892
+		dataCategory: DayOfWeek
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day of Week]
+		sortByColumn: 'Day of Week Number'
+
+		annotation SQLBI_FilterSafe = True
+
+	column DateWithTransactions
+		isHidden
+		lineageTag: 727eb4fa-644a-4a69-8c80-858afae47840
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [DateWithTransactions]
+
+		annotation SQLBI_AttributeTypes = DateDuration
+
+	hierarchy Calendar
+		isHidden
+		lineageTag: bd625d7e-e23b-4b70-b137-ced74f20a575
+
+		level Year
+			lineageTag: e6f7a358-b318-4efe-987f-b79aa8621654
+			column: Year
+
+		level Month
+			lineageTag: 3f81c4cd-c360-49d8-a8fd-9164977875ed
+			column: 'Year Month'
+
+		level Date
+			lineageTag: fc6ab500-bc14-4166-a5cd-e64247573025
+			column: Date
+
+	partition DateAutoTemplate = calculated
+		mode: import
+		source = ```
+				
+				--  
+				--     Configuration
+				--  
+				VAR __FirstDayOfWeek = 1
+				----------------------------------------
+				VAR __WeekDayCalculationType = IF ( __FirstDayOfWeek = 0, 7, __FirstDayOfWeek ) + 10
+				VAR __Calendar = 
+				    VAR __FirstYear = YEAR ( MINX ( { MIN ( 'DimLotto'[DataProduzione] ), MIN ( 'DimLotto'[DataScadenza] ), MIN ( 'FattoProduzione'[Data] ), MIN ( 'FattoMagazzino'[DataSnapshot] ), MIN ( 'FattoMagazzino'[Scadenza Lotto] ), MIN ( 'FattoRaccoltaLatte'[Data] ), MIN ( 'FattoVendite'[Data] ) }, ''[Value] ) )
+				    VAR __LastYear =  YEAR ( MAXX ( { MAX ( 'DimLotto'[DataProduzione] ), MAX ( 'DimLotto'[DataScadenza] ), MAX ( 'FattoProduzione'[Data] ), MAX ( 'FattoMagazzino'[DataSnapshot] ), MAX ( 'FattoMagazzino'[Scadenza Lotto] ), MAX ( 'FattoRaccoltaLatte'[Data] ), MAX ( 'FattoVendite'[Data] ) }, ''[Value] ) )
+				    RETURN CALENDAR (
+				        DATE ( __FirstYear, 1, 1 ),
+				        DATE ( __LastYear, 12, 31 )
+				    )
+				VAR __Step3 = 
+				    GENERATE (
+				        __Calendar,
+				        VAR __IsStandardLocale = IF ( FORMAT( DATE( 2000, 1, 1 ), "oooo" ) = "oooo", TRUE, FALSE )
+				        VAR __MonthFormatString = IF( __IsStandardLocale, "mmm", "ooo" )
+				        VAR __DayFormatString = IF( __IsStandardLocale, "ddd", "aaa" )
+				        VAR __LastTransactionDate = MAXX ( { MAX ( 'DimLotto'[DataProduzione] ), MAX ( 'DimLotto'[DataScadenza] ), MAX ( 'FattoProduzione'[Data] ), MAX ( 'FattoMagazzino'[DataSnapshot] ), MAX ( 'FattoMagazzino'[Scadenza Lotto] ), MAX ( 'FattoRaccoltaLatte'[Data] ), MAX ( 'FattoVendite'[Data] ) }, ''[Value] )
+				        VAR __Date = [Date]
+				        VAR __YearNumber = YEAR ( __Date )
+				        VAR __QuarterNumber = QUARTER ( __Date )
+				        VAR __YearQuarterNumber = CONVERT ( __YearNumber * 4 + __QuarterNumber - 1, INTEGER )
+				        VAR __MonthNumber = MONTH ( __Date )
+				        VAR __WeekDayNumber = WEEKDAY ( __Date, __WeekDayCalculationType )
+				        VAR __WeekDay = FORMAT ( __Date, __DayFormatString )
+				        RETURN ROW ( 
+				            "Year", __YearNumber,
+				            "Year Quarter Number", __YearQuarterNumber,
+				            "Year Quarter", FORMAT ( __QuarterNumber, "\Q0" ) & "-" & FORMAT ( __YearNumber, "0000" ),
+				            "Quarter", FORMAT( __QuarterNumber, "\Q0" ),
+				            "Year Month", FORMAT ( __Date, __MonthFormatString & " yyyy" ),
+				            "Year Month Number", __YearNumber * 12 + __MonthNumber - 1,
+				            "Month", FORMAT ( __Date, __MonthFormatString ),
+				            "Month Number", __MonthNumber,
+				            "Day of Week Number", __WeekDayNumber,
+				            "Day of Week", __WeekDay,
+				            "DateWithTransactions", __Date <= __LastTransactionDate 
+				        )
+				    )
+				RETURN
+				    __Step3
+				```
+
+	annotation SQLBI_Template = Dates
+
+	annotation SQLBI_TemplateTable = DateAutoTemplate
+
+	annotation SQLBI_CalendarType = Calendar
+

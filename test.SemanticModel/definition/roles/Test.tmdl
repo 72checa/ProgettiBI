@@ -1,0 +1,7 @@
+role Test
+	modelPermission: read
+
+	tablePermission DimStabilimento = [EmailResponsabile] == "resp.ariano@caseificiodemo.it" && [StabilimentoID] == 1
+
+	annotation PBI_Id = 64611868fbfd494bb564f0a45eb29491
+
